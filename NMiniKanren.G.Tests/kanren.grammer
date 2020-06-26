@@ -1,0 +1,36 @@
+﻿:: pgm
+
+@include-builtin
+@lex-ignore spacing
+
+spacing = (@* \space)
+
+pgm = sig (@* stm)
+
+sig = 'run' (@or star:#\* max:(@* digit)) spacing 'for' output:value
+
+stm = (@or dec:dec fresh:fresh con:con)
+
+dec = var:var '=' value:value
+fresh = 'fresh' (@* var:var (@! '='))
+con = '|-' goal:goal
+
+var-start = (@or #\_ #\- alpha)
+var = (@err'invalid var' var-start (@* (@or var-start digit))) spacing
+
+value = (@or prim-value goal:goal)
+
+prim-value = (@or var:var number:number string:string pair:pair)
+
+string = \' (@* (@! \') <*>) \' spacing
+
+pair = '(' (@* elem:value) ')'
+
+goal = (@or or:(and-goal '||' goal) and-goal)
+
+prim-goal = (@or succeed:'#s'
+			     fail:'#u'
+			     eq:(prim-value '==' prim-value)
+			     pa:('(' goal ')'))
+
+and-goal = (@or and:(prim-goal '&&' and-goal) prim-goal)
