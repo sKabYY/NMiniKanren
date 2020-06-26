@@ -17,7 +17,7 @@ namespace NMiniKanren.Tests
             var Barbara = "Barbara";
             var Christine = "Christine";
             var Yolanda = "Yolanda";
-            var res = KRunner.Run(10, (k, q) =>
+            var res = KRunner.Run(null, (k, q) =>
             {
                 // 男人集合
                 var manNames = new string[] { George, John, Rebert };
